@@ -1,0 +1,39 @@
+version: '2.1'
+
+services:
+  #Jupiter Notebook
+  lem_notebook:
+    container_name: lem_notebook
+    build:
+      context: ./Dockerconf
+      dockerfile: django.Dockerfile 
+  #  depends_on:
+  #    lem_test_db:
+  #       condition: service_healthy
+    volumes:
+      - ./media:/src/media
+      - ./static:/src/static
+      - ./codigo_extra:/src/codigo_extra
+      - ./Notebooks:/src/Notebooks
+      - ./Dockerconf/Jupyter/jupyter.sh:/usr/local/bin/jupyter.sh
+      - ./Dockerconf/Jupyter/install_conda.sh:/usr/local/bin/install_conda.sh
+      - ./Dockerconf/Jupyter/install_pip.sh:/usr/local/bin/install_pip.sh
+      - ./Dockerconf/Jupyter/jupyter_notebook_config.py:/root/.jupyter/jupyter_notebook_config.py
+    command:
+      - jupyter.sh 
+    healthcheck:
+      test: "exit 0"
+    expose:
+      - "8888"
+
+  lem_nginx:
+    image: nginx:latest
+    container_name: lem_nginex
+    ports:
+      - "80:80"
+    volumes:
+      - ./Dockerconf/Nginx:/etc/nginx/conf.d
+    depends_on:
+      - lem_notebook
+    links:
+      - lem_notebook

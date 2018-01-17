@@ -1,0 +1,87 @@
+# Directorios sin seguimiento
+static
+media
+
+
+# Elementos sin seguimiento
+
+# Precompilados de python
+
+*.pyc
+__pycache__/
+
+# Linux
+.*
+!.gitignore
+!.htaccess
+*~
+
+# Editores
+*.swp
+nbproject
+nbproject/*
+*.tmlanguage.cache
+*.tmPreferences.cache
+*.sublime-project
+*.sublime-projectcompletions
+*.sublime-workspace
+terminal.glue
+/.idea
+
+\#*\#
+/.emacs.desktop
+/.emacs.desktop.lock
+*.elc
+auto-save-list
+tramp
+.\#*
+
+# Org-mode
+.org-id-locations
+*_archive
+
+# flymake-mode
+*_flymake.*
+
+# eshell files
+/eshell/history
+/eshell/lastdir
+
+# elpa packages
+/elpa/
+
+# reftex files
+*.rel
+
+# AUCTeX auto folder
+/auto/
+
+# cask packages
+.cask/
+dist/
+
+# Flycheck
+flycheck_*.el
+
+# server auth directory
+/server/
+
+# projectiles files
+.projectile
+
+# directory configuration
+
+
+# Secretos
+secrets
+Back/config/settings/secrets/*
+Back/config/settings/secrets/*.json
+secrets*
+secrets.*
+secret*
+jupyter_notebook_config.py
+.ipynb_checkpoints
+
+
+#carpetas de terceros
+geo-independence-testing
