@@ -21,26 +21,32 @@ RUN apt-get install -y curl grep sed dpkg && \
     rm tini.deb && \
     apt-get clean
 
+
+# Path de conda
+ENV PATH /opt/conda/bin:$PATH
 # Librerías para que sirva opencv
-RUN apt-get install -y libgtk2.0-dev libpng12-0 binutils libproj-dev tesseract-ocr tesseract-ocr-spa tesseract-ocr-spa tesseract-ocr-fra 
+RUN apt-get install -y libgtk2.0-dev libpng12-0 binutils libproj-dev 
+#tesseract-ocr tesseract-ocr-spa tesseract-ocr-spa tesseract-ocr-fra 
 
 #Crear y activar el enviroment root en conda
 RUN bash -c "source /opt/conda/bin/activate root"
 
 # Opencv
-RUN /opt/conda/bin/conda install -y  -c menpo opencv3=3.2.0
+#RUN /opt/conda/bin/conda install -y  -c menpo opencv3=3.2.0
 
-RUN /opt/conda/bin/conda install -y  -c conda-forge psycopg2=2.7.1 && \
-    /opt/conda/bin/conda install -y  -c anaconda-nb-extensions nbbrowserpdf && \
-    /opt/conda/bin/conda install -y  -c anaconda basemap && \
-    /opt/conda/bin/conda install -y  -c conda-forge geopandas  && \
-    /opt/conda/bin/conda install -y  -c conda-forge ipyleaflet && \
-    /opt/conda/bin/conda install -y  -c anaconda openpyxl 
+RUN /opt/conda/bin/conda install -y -c conda-forge psycopg2=2.7.1 && \
+    /opt/conda/bin/conda install -y -c conda-forge basemap && \
+    /opt/conda/bin/conda install -y -c conda-forge jupyter_contrib_nbextensions && \
+    /opt/conda/bin/conda install -y -c conda-forge geos && \
+    /opt/conda/bin/conda install -y -c conda-forge/label/broken widgetsnbextension && \
+    /opt/conda/bin/conda install -y -c conda-forge/label/broken libgdal && \
+    /opt/conda/bin/conda install -y -c conda-forge geopandas  && \
+    /opt/conda/bin/conda install -y -c conda-forge ipywidgets && \
+    /opt/conda/bin/conda install -y -c conda-forge/label/broken libnetcdf && \
+    /opt/conda/bin/conda install -y -c conda-forge ipyleaflet && \
+    /opt/conda/bin/conda install -y -c conda-forge openpyxl 
 
 
-ENV PATH /opt/conda/bin:$PATH
-ENV GDAL_DATA /opt/conda/share/gdal
-ENV GOOGLE_APPLICATION_CREDENTIALS=/src/Auth/secret.json
 
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
