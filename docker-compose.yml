@@ -6,15 +6,12 @@ services:
     container_name: lem_notebook
     build:
       context: ./Dockerconf
-      dockerfile: django.Dockerfile 
+      dockerfile: jupyter.Dockerfile 
   #  depends_on:
   #    lem_test_db:
   #       condition: service_healthy
     volumes:
-      - ./media:/src/media
-      - ./static:/src/static
-      - ./codigo_extra:/src/codigo_extra
-      - ./Notebooks:/src/Notebooks
+      - ./lema/src:/src
       - ./Dockerconf/Jupyter/jupyter.sh:/usr/local/bin/jupyter.sh
       - ./Dockerconf/Jupyter/install_conda.sh:/usr/local/bin/install_conda.sh
       - ./Dockerconf/Jupyter/install_pip.sh:/usr/local/bin/install_pip.sh

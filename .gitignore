@@ -1,6 +1,12 @@
 # Directorios sin seguimiento
 static
 media
+OLDSTRUCTURE
+lema/data
+lema/src/data/corpus_twitter
+lema/src/data/corpus_twitter
+lema/src/data/procesados
+lema/src/data/procesados/TWITTER_COLOMBIA_FREQ.csv
 
 
 # Elementos sin seguimiento
