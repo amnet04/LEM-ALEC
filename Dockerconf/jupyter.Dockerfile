@@ -1,19 +1,21 @@
-FROM debian:8.5
+FROM debian:9
 
 MAINTAINER Kamil Kwiek <kamil.kwiek@continuum.io>
 
+# Locale config
 ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
 
+
+# Basic debian packages updates and instalation
 RUN apt-get update --fix-missing && apt-get install -y apt-utils 
+RUN apt-get install -y make build-essential libssl-dev zlib1g-dev
+RUN apt-get install -y libbz2-dev libreadline-dev libsqlite3-dev wget curl llvm
+RUN apt-get install -y libncurses5-dev  libncursesw5-dev xz-utils tk-dev
 RUN apt-get install -y wget bzip2  ca-certificates
 RUN apt-get install -y libglib2.0-0 libxext6 libsm6 libxrender1
 RUN apt-get install -y git mercurial subversion
 
-RUN echo 'export PATH=/opt/conda/bin:$PATH' > /etc/profile.d/conda.sh && \
-    wget --quiet https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh -O ~/anaconda.sh && \
-    /bin/bash ~/anaconda.sh -b -p /opt/conda && \
-    rm ~/anaconda.sh
-
+# Instalación de TINI
 RUN apt-get install -y curl grep sed dpkg && \
     TINI_VERSION=`curl https://github.com/krallin/tini/releases/latest | grep -o "/v.*\"" | sed 's:^..\(.*\).$:\1:'` && \
     curl -L "https://github.com/krallin/tini/releases/download/v${TINI_VERSION}/tini_${TINI_VERSION}.deb" > tini.deb && \
@@ -21,34 +23,45 @@ RUN apt-get install -y curl grep sed dpkg && \
     rm tini.deb && \
     apt-get clean
 
-
-# Path de conda
-ENV PATH /opt/conda/bin:$PATH
-# Librerías para que sirva opencv
-RUN apt-get install -y libgtk2.0-dev libpng12-0 binutils libproj-dev 
-#tesseract-ocr tesseract-ocr-spa tesseract-ocr-spa tesseract-ocr-fra 
-
-#Crear y activar el enviroment root en conda
-RUN bash -c "source /opt/conda/bin/activate root"
-
-# Opencv
-#RUN /opt/conda/bin/conda install -y  -c menpo opencv3=3.2.0
-
-RUN /opt/conda/bin/conda install -y -c conda-forge psycopg2
-RUN /opt/conda/bin/conda install -y -c conda-forge basemap
-RUN /opt/conda/bin/conda install -y -c conda-forge jupyter_contrib_nbextensions
-RUN /opt/conda/bin/conda install -y -c conda-forge/label/broken widgetsnbextension
-RUN /opt/conda/bin/conda install -y -c conda-forge libgdal
-RUN /opt/conda/bin/conda install -y -c conda-forge geopandas 
-RUN /opt/conda/bin/conda install -y -c conda-forge ipywidgets
-RUN /opt/conda/bin/conda install -y -c conda-forge fiona
-RUN /opt/conda/bin/conda install -y -c conda-forge ipyleaflet
-RUN /opt/conda/bin/conda install -y -c conda-forge openpyxl 
+# Python 3.5 instalation
+RUN apt-get install -y python3.5
+RUN apt-get install -y python3.5-dev
+RUN apt-get install -y python3.5-venv
 
 
-RUN ln -s /opt/conda/lib/libgeos-3.5.1.so /opt/conda/lib/libgeos-3.5.0.so
+# pip 3.5 instalation and simbolic link creation to
+# relplace python and  pip default versions.
+RUN wget https://bootstrap.pypa.io/get-pip.py
+RUN python3.5 get-pip.py
+RUN ln -s /usr/bin/python3.5 /usr/local/bin/python3
+RUN rm /usr/local/bin/pip3
+RUN ln -s /usr/local/bin/pip /usr/local/bin/pip3
+
+# Install Jupiter notebook
+RUN python3 -m pip install --upgrade pip
+RUN python3 -m pip install jupyter
+
+# Install numpy, scipy, matplotlib, sklearn and pandas
+RUN python3 -m pip install numpy
+RUN python3 -m pip install scipy
+RUN python3 -m pip install matplotlib
+RUN python3 -m pip install scikit-learn
+RUN python3 -m pip install pandas
+
+# Install geopandas and dependencies
+RUN python3 -m pip install shapely
+RUN python3 -m pip install fiona
+RUN python3 -m pip install six
+RUN python3 -m pip install pyproj
+RUN python3 -m pip install geopy
+RUN python3 -m pip install rtree 
+RUN python3 -m pip install geopandas
+
+# Punto de entrada TINI
 ENTRYPOINT [ "/usr/bin/tini", "--" ]
 
+# Directorio de trabajo
 WORKDIR /src
 
+# Arrancar bash
 CMD [ "/bin/bash" ]

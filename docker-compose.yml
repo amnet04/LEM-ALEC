@@ -2,8 +2,8 @@ version: '2.1'
 
 services:
   #Jupiter Notebook
-  lem_notebook:
-    container_name: lem_notebook
+  lem_notebook_revised:
+    container_name: lem_notebook_revised
     build:
       context: ./Dockerconf
       dockerfile: jupyter.Dockerfile 
@@ -13,8 +13,6 @@ services:
     volumes:
       - ./lema/src:/src
       - ./Dockerconf/Jupyter/jupyter.sh:/usr/local/bin/jupyter.sh
-      - ./Dockerconf/Jupyter/install_conda.sh:/usr/local/bin/install_conda.sh
-      - ./Dockerconf/Jupyter/install_pip.sh:/usr/local/bin/install_pip.sh
       - ./Dockerconf/Jupyter/jupyter_notebook_config.py:/root/.jupyter/jupyter_notebook_config.py
     command:
       - jupyter.sh 
@@ -23,14 +21,14 @@ services:
     expose:
       - "8888"
 
-  lem_nginx:
+  lem_nginex_revised:
     image: nginx:latest
-    container_name: lem_nginex
+    container_name: lem_nginex_revised
     ports:
       - "80:80"
     volumes:
       - ./Dockerconf/Nginx:/etc/nginx/conf.d
     depends_on:
-      - lem_notebook
+      - lem_notebook_revised
     links:
-      - lem_notebook
+      - lem_notebook_revised
